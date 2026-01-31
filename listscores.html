@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Memory Game High Scores</title>
+        <meta name="description" content="Memory Game">
+        <meta name="author" content="Rolando Vincoy">
+        <link rel="stylesheet" href="site-plan.css">
+        <link rel="icon" type="image/png" href="cards/favicon.png" sizes="92x92" />
+        <meta property="og:title" content="Memory Game">
+        <meta property="og:description" content="This is a memory game website.">
+        <meta property="og:image" content="https://rvincoy.github.io/wdd131/memory/cards/favicon.png">
+        <meta property="og:url" content="https://rvincoy.github.io/wdd131/memory">
+        <meta property="og:type" content="website">
+    </head>
+<body>
+    <h1 style="display:flex; background-color: #312F2F; color: white;height: 70px; justify-content: center; align-items: center; margin-bottom: 40px;">Memory Game High Scores</h1>
+    <table id="scoreTable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <script>
+    const sheetdbUrl = "https://sheetdb.io/api/v1/6zqn32d50ikqu";
+
+    fetch(sheetdbUrl)
+      .then(response => response.json())
+      .then(data => {
+        // Sort scores by ascending order
+        data.sort((a, b) => parseInt(a.score) - parseInt(b.score));
+
+        let x = 0;
+        const tbody = document.querySelector('#scoreTable tbody');
+
+        data.forEach(entry => {
+          const row = document.createElement('tr');
+          if (x < 1) {
+            row.innerHTML = `<td class="row1">${entry.name}</td><td class="row1">${entry.score}</td>`;
+            x = 1;
+          } else {
+            row.innerHTML = `<td class="row2">${entry.name}</td><td class="row2">${entry.score}</td>`;
+            x = 0;
+          }
+          tbody.appendChild(row);
+        });
+      })
+      .catch(error => console.error('Error loading scores from Google Sheets:', error));
+    </script>
+</body>
+<footer>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="listscores.html">High Scores</a>
+        <a href="site-plan.html">Site Plan</a>
+    </nav>
+</footer>
+</html>
