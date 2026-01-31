@@ -40,7 +40,7 @@ const cardGenerator = () => {
 
   //cheat by going to the console
   function myCheat(value) {
-    console.log(value.id + " " + value.name);
+  //  console.log(value.id + " " + value.name); no cheating
   }
 
   //assign the cards on the screen
