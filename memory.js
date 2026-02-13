@@ -183,4 +183,3 @@ function saveScoreData(scoreData) {
   });
 }
 
-
