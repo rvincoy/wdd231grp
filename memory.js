@@ -210,4 +210,3 @@ function saveScoreData(scoreData) {
   });
 }
 
-
