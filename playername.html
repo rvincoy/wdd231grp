@@ -1,0 +1,53 @@
+
+<!DOCTYPE html>
+<html lang="en-us">
+	<head>
+		<meta charset="utf-8" />
+		<title>Enter Player Name</title>
+		<link type="text/css" rel="stylesheet" href="memory.css" />
+	</head>
+
+	<body>
+
+		<header>
+			<h1>Enter Player Name</h1>
+		</header>
+
+		<main>
+			<p></p>
+			<form id="nameForm">
+			<label for="playerNameInput">Player Name:</label>
+			<input type="text" id="playerNameInput" required>
+			<button type="submit">Save Name</button>
+			</form>
+			<p id="message"></p>
+
+			<nav>
+				<a href="index.html">Back to the Home Page</a>
+			</nav>
+			
+		</main>
+
+		<script>
+		const form = document.getElementById("nameForm");
+		const message = document.getElementById("message");
+
+		// Autofill if name already exists
+		const existingName = localStorage.getItem("playerName");
+		if (existingName) {
+			document.getElementById("playerNameInput").value = existingName;
+		}
+
+		form.addEventListener("submit", function(event) {
+			event.preventDefault();
+
+			const playerName = document.getElementById("playerNameInput").value;
+
+			localStorage.setItem("playerName", playerName);
+
+			message.textContent = `Player name "${playerName}" has been successfully stored!`;
+		});
+		</script>
+
+	</body>
+</html>

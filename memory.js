@@ -1,4 +1,31 @@
 document.addEventListener("DOMContentLoaded", async (e) => {
+  const playerNameLink = document.getElementById("playerNameLink");
+  const storedName = localStorage.getItem("playerName");
+
+  if (storedName) {
+    playerNameLink.textContent = `Change Player Name from ${storedName}`;
+  }
+
+  const restartLink = document.getElementById("restartGameLink");
+  restartLink.addEventListener("click", function (e) {
+    e.preventDefault();
+    location.reload();
+  });
+
+  const menuButton = document.getElementById("menuButton");
+  const dropdownMenu = document.getElementById("dropdownMenu");
+
+  menuButton.addEventListener("click", function () {
+    dropdownMenu.classList.toggle("show");
+  });
+
+  // Optional: Close dropdown if clicked outside
+  window.addEventListener("click", function (event) {
+    if (!event.target.matches("#menuButton")) {
+      dropdownMenu.classList.remove("show");
+    }
+  });
+
   console.log(e);
   await readScores();
   cardGenerator();
@@ -99,7 +126,7 @@ const compareCards = (e) => {
       if (toggleCards.length === 32 && gameMessage == "") {
         try {
           if (scoreData.length >= 10 && playMoves < scoreData[9].score) {
-            let playerName = prompt("You placed in the top 10! Please enter your name:");
+            let playerName = localStorage.getItem("playerName");
             if (!playerName) playerName = "Unknown Player";
 
             scoreData.pop(); // Remove lowest score
@@ -109,7 +136,7 @@ const compareCards = (e) => {
             scoreData.sort((a, b) => a.score - b.score);
             const playerIndex = scoreData.findIndex(entry => entry.name === playerName && entry.score === playMoves);
             if (playerIndex !== -1) {
-              alert(`Congratulations ${playerName}! You are ranked #${playerIndex + 1} on the leaderboard.`);
+              message.textContent = `Congratulations ${playerName}! You are ranked #${playerIndex + 1} on the leaderboard.`;
             }
 
             saveScoreData(scoreData); // Save updated file

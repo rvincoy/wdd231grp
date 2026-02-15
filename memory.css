@@ -114,6 +114,7 @@ nav {
   font-size: 1.2em;
 }
 nav {
+  margin: 10px;
   list-style-type: none;
   display: flex;
   justify-content: center;
@@ -251,4 +252,51 @@ th {
 
 .toggleCard {
   transform: rotateY(180deg);
+}
+
+.dropdown-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: inline-block;
+  margin-top: 10px;
+}
+
+#menuButton {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+#menuButton:hover {
+  background-color: var(--accent1-color);
+}
+
+.dropdown-content {
+  text-align: left;
+  display: none;
+  position: absolute;
+  background-color: var(--secondary-color);
+  min-width: 400px;
+  box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  display: block;
+  padding: 10px;
+  text-decoration: none;
+  color: var(--primary-color);
+}
+
+.dropdown-content a:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.show {
+  display: block;
 }
