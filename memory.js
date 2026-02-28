@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", async (e) => {
   const playerNameLink = document.getElementById("playerNameLink");
   const storedName = localStorage.getItem("playerName");
+  const highScoreLink = document.getElementById("highScoreLink");
 
   if (storedName) {
     playerNameLink.textContent = `Change Player Name from ${storedName}`;
@@ -124,6 +125,7 @@ const compareCards = (e) => {
       console.log(document.querySelectorAll(".toggleCard"));
       const toggleCards = document.querySelectorAll(".toggleCard");
       if (toggleCards.length === 32 && gameMessage == "") {
+        highScoreLink.href = "listscores.html?score=" + playMoves; //test this
         try {
           if (scoreData.length >= 10 && playMoves < scoreData[9].score) {
             let playerName = localStorage.getItem("playerName");
