@@ -29,7 +29,10 @@
     <script>
     const sheetdbUrl = "https://sheetdb.io/api/v1/6zqn32d50ikqu";
     const params =  new URLSearchParams(window.location.search);
-    message.textContent = "Current Score is " + params.get("score") + " by " + localStorage.getItem("playerName");
+    if (params.get("score"))
+    {
+        message.textContent = "Current Score is " + params.get("score") + " by " + localStorage.getItem("playerName");
+    }
 
     fetch(sheetdbUrl)
       .then(response => response.json())
