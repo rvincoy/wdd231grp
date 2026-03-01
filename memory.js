@@ -119,6 +119,7 @@ const compareCards = (e) => {
   const activeCard = e.target.closest(".card");
   activeCard.classList.add("flipped");
   activeCard.style.pointerEvents = "none";
+  const highScoreLink = document.getElementById("highScoreLink");
 
   const flippedCards = document.querySelectorAll(".flipped");
 
@@ -135,6 +136,7 @@ const compareCards = (e) => {
       const toggleCards = document.querySelectorAll(".toggleCard");
 
       if (toggleCards.length === 32) {
+        highScoreLink.href = "listscores.html?score=" + playMoves;
         handleHighScore();
       }
     } else {
