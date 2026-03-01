@@ -1,7 +1,6 @@
-document.addEventListener("DOMContentLoaded", async (e) => {
+document.addEventListener("DOMContentLoaded", async () => {
   const playerNameLink = document.getElementById("playerNameLink");
   const storedName = localStorage.getItem("playerName");
-  const highScoreLink = document.getElementById("highScoreLink");
 
   if (storedName) {
     playerNameLink.textContent = `Change Player Name from ${storedName}`;
@@ -20,27 +19,51 @@ document.addEventListener("DOMContentLoaded", async (e) => {
     dropdownMenu.classList.toggle("show");
   });
 
-  // Optional: Close dropdown if clicked outside
   window.addEventListener("click", function (event) {
     if (!event.target.matches("#menuButton")) {
       dropdownMenu.classList.remove("show");
     }
   });
 
-  console.log(e);
-  await readScores();
+  await initializeScores();
   cardGenerator();
   board();
 });
 
 const playMovesCount = document.querySelector("h1");
-let playMoves=0;
+let playMoves = 0;
 let scoreData = [];
 
 playMovesCount.textContent = "Total Moves: " + playMoves;
 
+async function initializeScores() {
+  const stored = localStorage.getItem("memoryTop10");
+
+  if (!stored) {
+    try {
+      const response = await fetch("scores.json");
+      const data = await response.json();
+
+      scoreData = data;
+      localStorage.setItem("memoryTop10", JSON.stringify(data));
+      console.log("Scores loaded from JSON.");
+    } catch (error) {
+      console.error("Error loading JSON:", error);
+      scoreData = [];
+    }
+  } else {
+    scoreData = JSON.parse(stored);
+    console.log("Scores loaded from localStorage.");
+  }
+
+  scoreData.sort((a, b) => a.score - b.score);
+}
+
+function updateLocalStorage() {
+  localStorage.setItem("memoryTop10", JSON.stringify(scoreData));
+}
+
 const cardGenerator = () => {
-  //card images
   let cardData = [
     { imgSrc: "./cards/ClubAce.jpg", id: 1, name: "ClubAce" },
     { imgSrc: "./cards/ClubKing.jpg", id: 2, name: "ClubKing" },
@@ -60,30 +83,19 @@ const cardGenerator = () => {
     { imgSrc: "./cards/SpadeQueen.jpg", id: 16, name: "SpadeQueen" },
   ];
 
-  //shuffle the cards randomly
   cardData.sort(() => Math.random() - 0.5);
 
-  console.log("The order of the cards are: ");
-  cardData.forEach(myCheat); // satisfies ES6 function requirement
+  const section = document.querySelector("section");
 
-  //cheat by going to the console
-  function myCheat(value) {
-  //  console.log(value.id + " " + value.name); no cheating
-  }
-
-  //assign the cards on the screen
   cardData.forEach((item) => {
-    const section = document.querySelector("section");
     const card = document.createElement("div");
     card.classList = "card";
-
-    card.setAttribute("id", item.id);
     card.setAttribute("name", item.name);
 
     const face = document.createElement("img");
     face.classList = "face";
     face.src = item.imgSrc;
-    face.alt = "hidden card"
+
     const back = document.createElement("div");
     back.classList = "back";
 
@@ -92,123 +104,77 @@ const cardGenerator = () => {
     card.appendChild(back);
 
     card.addEventListener("click", (e) => {
-      console.log(e);
-      //animate the flipping of card
       face.classList.toggle("toggleCard");
       card.classList.toggle("toggleCard");
       compareCards(e);
     });
   });
-
-  //
 };
 
 const board = () => {
   console.log("Memory game");
 };
 
-//Compare Cards
-let gameMessage="";
 const compareCards = (e) => {
-  const activeCard = e.target;
+  const activeCard = e.target.closest(".card");
   activeCard.classList.add("flipped");
   activeCard.style.pointerEvents = "none";
+
   const flippedCards = document.querySelectorAll(".flipped");
+
   if (flippedCards.length === 2) {
-    playMoves += 1;
+    playMoves++;
     playMovesCount.textContent = "Total Moves: " + playMoves;
-    if (flippedCards[0].getAttribute("name") === flippedCards[1].getAttribute("name")) {
-      console.log("matched");
-      flippedCards.forEach((card) => {
-        card.classList.remove("flipped");
-      });
-      console.log(document.querySelectorAll(".toggleCard"));
+
+    if (
+      flippedCards[0].getAttribute("name") ===
+      flippedCards[1].getAttribute("name")
+    ) {
+      flippedCards.forEach((card) => card.classList.remove("flipped"));
+
       const toggleCards = document.querySelectorAll(".toggleCard");
-      if (toggleCards.length === 32 && gameMessage == "") {
-        highScoreLink.href = "listscores.html?score=" + playMoves; //test this
-        try {
-          if (scoreData.length >= 10 && playMoves < scoreData[9].score) {
-            let playerName = localStorage.getItem("playerName");
-            if (!playerName) playerName = "Unknown Player";
 
-            scoreData.pop(); // Remove lowest score
-            scoreData.push({ name: playerName, score: playMoves });
-
-            // Sort scores by fewest moves (lower is better)
-            scoreData.sort((a, b) => a.score - b.score);
-            const playerIndex = scoreData.findIndex(entry => entry.name === playerName && entry.score === playMoves);
-            if (playerIndex !== -1) {
-              message.textContent = `Congratulations ${playerName}! You are ranked #${playerIndex + 1} on the leaderboard.`;
-            }
-
-            saveScoreData(scoreData); // Save updated file
-            console.log(scoreData); //log it
-          }
-        } catch (e) {
-          console.log("Error saving high score:", e);
-        }
+      if (toggleCards.length === 32) {
+        handleHighScore();
       }
     } else {
-      console.log("not matched");
       flippedCards.forEach((card) => {
-        card.style.pointerEvents="all";
+        card.style.pointerEvents = "all";
         card.classList.remove("flipped");
         setTimeout(() => {
           card.classList.remove("toggleCard");
-          card.childNodes[0].classList.remove("toggleCard");
-        },1000);
+          card.querySelector(".face").classList.remove("toggleCard");
+        }, 1000);
       });
     }
   }
-}
+};
 
-async function readScores() {
-  try {
-    const res = await fetch("https://sheetdb.io/api/v1/6zqn32d50ikqu");
-    const data = await res.json();
-    scoreData = data.map(entry => ({
-      name: entry.name,
-      score: parseInt(entry.score, 10)
-    }));
+function handleHighScore() {
+  let playerName = localStorage.getItem("playerName");
 
-    // Sort scores by lowest number of moves
+  if (!playerName) {
+    playerName = prompt("Enter your name:");
+    if (!playerName) playerName = "Unknown Player";
+    localStorage.setItem("playerName", playerName);
+  }
+
+  if (scoreData.length < 10 || playMoves < scoreData[9].score) {
+    if (scoreData.length >= 10) scoreData.pop();
+
+    scoreData.push({ name: playerName, score: playMoves });
     scoreData.sort((a, b) => a.score - b.score);
-    console.log("Loaded score data from Google Sheets:", scoreData);
-  } catch (err) {
-    console.error("Failed to load score data from Google Sheets:", err);
+
+    updateLocalStorage();
+
+    const playerIndex = scoreData.findIndex(
+      (entry) => entry.name === playerName && entry.score === playMoves
+    );
+
+    alert(
+      `Congratulations ${playerName}! You are ranked #${
+        playerIndex + 1
+      } on the leaderboard.`
+    );
   }
 }
-
-function saveScoreData(scoreData) {
-  const sheetdbUrl = "https://sheetdb.io/api/v1/6zqn32d50ikqu";
-
-  // Step 1: Delete all existing rows
-  fetch(`${sheetdbUrl}/all`, {
-    method: "DELETE",
-  })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error("Failed to delete scores.");
-    }
-    console.log("All existing scores deleted.");
-
-    // Step 2: Re-insert updated score list
-    return fetch(sheetdbUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        data: scoreData
-      })
-    });
-  })
-  .then(res => res.json())
-  .then(data => {
-    console.log("Scores saved successfully:", data);
-  })
-  .catch(error => {
-    console.error("Error saving scores to Google Sheets:", error);
-  });
-}
-

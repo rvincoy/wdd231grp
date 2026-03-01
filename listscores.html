@@ -27,37 +27,65 @@
     </table>
     <p id="message"></p>
     <script>
-    const sheetdbUrl = "https://sheetdb.io/api/v1/6zqn32d50ikqu";
-    const params =  new URLSearchParams(window.location.search);
-    if (params.get("score"))
-    {
-        message.textContent = "Current Score is " + params.get("score") + " by " + localStorage.getItem("playerName");
+const params = new URLSearchParams(window.location.search);
+const message = document.getElementById("message");
+
+if (params.get("score")) {
+  message.textContent =
+    "Current Score is " +
+    params.get("score") +
+    " by " +
+    localStorage.getItem("playerName");
+}
+
+async function loadScores() {
+  let scores = [];
+  const stored = localStorage.getItem("memoryTop10");
+
+  if (stored) {
+    scores = JSON.parse(stored);
+  } else {
+    try {
+      const response = await fetch("scores.json");
+      scores = await response.json();
+      localStorage.setItem("memoryTop10", JSON.stringify(scores));
+    } catch (error) {
+      console.error("Error loading scores:", error);
+      return;
+    }
+  }
+
+  // Sort ascending (lowest moves first)
+  scores.sort((a, b) => a.score - b.score);
+
+  const tbody = document.querySelector("#scoreTable tbody");
+  tbody.innerHTML = "";
+
+  let x = 0;
+
+  scores.forEach((entry) => {
+    const row = document.createElement("tr");
+
+    if (x < 1) {
+      row.innerHTML = `
+        <td class="row1">${entry.name}</td>
+        <td class="row1">${entry.score}</td>
+      `;
+      x = 1;
+    } else {
+      row.innerHTML = `
+        <td class="row2">${entry.name}</td>
+        <td class="row2">${entry.score}</td>
+      `;
+      x = 0;
     }
 
-    fetch(sheetdbUrl)
-      .then(response => response.json())
-      .then(data => {
-        // Sort scores by ascending order
-        data.sort((a, b) => parseInt(a.score) - parseInt(b.score));
+    tbody.appendChild(row);
+  });
+}
 
-        let x = 0;
-        const tbody = document.querySelector('#scoreTable tbody');
-
-        data.forEach(entry => {
-          const row = document.createElement('tr');
-          if (x < 1) {
-            row.innerHTML = `<td class="row1">${entry.name}</td><td class="row1">${entry.score}</td>`;
-            x = 1;
-          } else {
-            row.innerHTML = `<td class="row2">${entry.name}</td><td class="row2">${entry.score}</td>`;
-            x = 0;
-          }
-          tbody.appendChild(row);
-        });
-      })
-      .catch(error => console.error('Error loading scores from Google Sheets:', error));
-          
-    </script>
+loadScores();
+</script>
 </body>
 <footer>
     <nav>
