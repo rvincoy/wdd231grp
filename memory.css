@@ -307,4 +307,10 @@ th {
     grid-template-columns: repeat(4, min(19vw, 6.6rem));
     grid-template-rows: repeat(4, min(19vw, 6.6rem));
   }
+  .dropdown-nav {
+    z-index: 1000;
+  }
+  .dropdown-content {
+    z-index: 1001;
+  }
 }

@@ -128,6 +128,7 @@ function handleHighScore() {
     playerName = prompt("Enter your name:");
     if (!playerName) playerName = "Unknown Player";
     localStorage.setItem("playerName", playerName);
+    playerNameLink.textContent = `Change Player Name from ${playerName}`;
   }
 
   if (scoreData.length < 10 || playMoves < scoreData[9].score) {
