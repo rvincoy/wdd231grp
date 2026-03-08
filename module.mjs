@@ -63,6 +63,7 @@ export const cardGenerator = () => {
     const face = document.createElement("img");
     face.classList = "face";
     face.src = item.imgSrc;
+    face.setAttribute("alt", "playing card image");
 
     const back = document.createElement("div");
     back.classList = "back";
