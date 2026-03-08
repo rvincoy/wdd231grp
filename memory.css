@@ -215,12 +215,12 @@ th {
 
 .gamesection {
   display: grid;
-  grid-template-columns: repeat(4, min(22vw, 8rem));
-  grid-template-rows: repeat(4, min(22vw, 8rem));
-  gap: .5rem;
+  grid-template-columns: repeat(4, 8rem);
+  grid-template-rows: repeat(4, 8rem);
+  gap: 1.5rem;
   perspective: 1200px;
-  margin-top: 60px;
-  margin-bottom: 50px;
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
 
 .back {
@@ -296,4 +296,15 @@ th {
 
 .show {
   display: block;
+}
+
+@media screen and (max-width: 600px) {
+  h1 {
+    font-size: 1.7rem;
+    height: 50px;
+  }
+  .gamesection {
+    grid-template-columns: repeat(4, min(19vw, 6.6rem));
+    grid-template-rows: repeat(4, min(19vw, 6.6rem));
+  }
 }
