@@ -146,10 +146,5 @@ function handleHighScore() {
     message.textContent =  `Congratulations ${playerName}! You are ranked #${
         playerIndex + 1
       } on the leaderboard.`;
-/*     alert(
-      `Congratulations ${playerName}! You are ranked #${
-        playerIndex + 1
-      } on the leaderboard.`
-    ); */
   }
 }

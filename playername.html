@@ -14,49 +14,32 @@
         <meta property="og:url" content="https://rvincoy.github.io/wdd231grp/">
         <meta property="og:type" content="website">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<header style="background-color: white;">
+			<h1 style="display: inline-block; background-color: #312F2F; color: white; padding: 10px 20px; border-radius: 8px; text-align: center; margin: 20px auto;">Enter Player Name</h1>
+		</header>
 	</head>
 
-	<body>
-
-		<header>
-			<h1>Enter Player Name</h1>
-		</header>
-
+	<body class="gamebody">
 		<main>
-			<p></p>
-			<form id="nameForm">
-			<label for="playerNameInput">Player Name:</label>
-			<input type="text" id="playerNameInput" required>
-			<button type="submit">Save Name</button>
-			</form>
-			<p id="message"></p>
+			<section>
+				<p></p>
+				<form id="nameForm">
+				<label for="playerNameInput">Player Name:</label>
+				<input type="text" id="playerNameInput" required>
+				<button type="submit">Save Name</button>
+				</form>
+				<p id="message"></p>
+			</section>
 
-			<nav>
-				<a href="index.html">Back to the Home Page</a>
-			</nav>
-			
+			<nav class="dropdown-nav">
+				<button id="menuButton">Menu ☰</button>
+
+				<div id="dropdownMenu" class="dropdown-content">
+					<a href="index.html">Home</a>
+					<a href="listscores.html" id="highScoreLink">High Scores</a>
+				</div>
+			</nav>	
 		</main>
-
-		<script>
-		const form = document.getElementById("nameForm");
-		const message = document.getElementById("message");
-
-		// Autofill if name already exists
-		const existingName = localStorage.getItem("playerName");
-		if (existingName) {
-			document.getElementById("playerNameInput").value = existingName;
-		}
-
-		form.addEventListener("submit", function(event) {
-			event.preventDefault();
-
-			const playerName = document.getElementById("playerNameInput").value;
-
-			localStorage.setItem("playerName", playerName);
-
-			message.textContent = `Player name "${playerName}" has been successfully stored!`;
-		});
-		</script>
-
+		<script src="playername.js"></script>
 	</body>
 </html>

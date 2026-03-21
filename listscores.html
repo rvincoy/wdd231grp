@@ -14,83 +14,29 @@
         <meta property="og:type" content="website">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
-<body>
-    <h1 style="display:flex; background-color: #312F2F; color: white;height: 70px; justify-content: center; align-items: center; margin-bottom: 40px;">Memory Game High Scores</h1>
-    <table id="scoreTable">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Score</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
-    <p id="message"></p>
-    <script>
-const params = new URLSearchParams(window.location.search);
-const message = document.getElementById("message");
+  <body class="gamebody">
+      <header style="background-color: white;">
+          <h1 style="display: inline-block; background-color: #312F2F; color: white; padding: 10px 20px; border-radius: 8px; text-align: center; margin: 20px auto;">Memory Game High Scores</h1>
+      </header>
+      <table id="scoreTable">
+          <thead>
+              <tr>
+                  <th>Name</th>
+                  <th>Score</th>
+              </tr>
+          </thead>
+          <tbody>
+          </tbody>
+      </table>
+      <p id="message"></p>
+			<nav class="dropdown-nav">
+				<button id="menuButton">Menu ☰</button>
 
-if (params.get("score")) {
-  message.textContent =
-    "Current Score is " +
-    params.get("score") +
-    " by " +
-    localStorage.getItem("playerName");
-}
-
-async function loadScores() {
-  let scores = [];
-  const stored = localStorage.getItem("memoryTop10");
-
-  if (stored) {
-    scores = JSON.parse(stored);
-  } else {
-    try {
-      const response = await fetch("scores.json");
-      scores = await response.json();
-      localStorage.setItem("memoryTop10", JSON.stringify(scores));
-    } catch (error) {
-      console.error("Error loading scores:", error);
-      return;
-    }
-  }
-
-  // Sort ascending (lowest moves first)
-  scores.sort((a, b) => a.score - b.score);
-
-  const tbody = document.querySelector("#scoreTable tbody");
-  tbody.innerHTML = "";
-
-  let x = 0;
-
-  scores.forEach((entry) => {
-    const row = document.createElement("tr");
-
-    if (x < 1) {
-      row.innerHTML = `
-        <td class="row1">${entry.name}</td>
-        <td class="row1">${entry.score}</td>
-      `;
-      x = 1;
-    } else {
-      row.innerHTML = `
-        <td class="row2">${entry.name}</td>
-        <td class="row2">${entry.score}</td>
-      `;
-      x = 0;
-    }
-
-    tbody.appendChild(row);
-  });
-}
-
-loadScores();
-</script>
-</body>
-<footer>
-    <nav>
-        <a href="index.html">Back to Home Page</a>
-    </nav>
-</footer>
+				<div id="dropdownMenu" class="dropdown-content">
+					<a href="index.html">Home</a>
+					<a href="playername.html" id="playerNameLink">Enter Playername</a>
+				</div>
+			</nav>	
+      <script src="listscores.js"></script>
+  </body>
 </html>
