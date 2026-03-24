@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback - Memory Game</title>
+    <link rel="stylesheet" href="memory.css">
+</head>
+<body class="gamebody">
+    <nav class="dropdown-nav">
+        <button id="menuButton">Menu ☰</button>
+        <div id="dropdownMenu" class="dropdown-content">
+            <a href="index.html">Home</a>
+            <a href="listscores.html">High Scores</a>
+            <a href="playername.html">Change Name</a>
+        </div>
+    </nav>
+
+    <header class="game-header" style="margin-top: 80px;">
+        <h1 style="background-color: #312F2F; color: white; padding: 15px; border-radius: 8px; text-align: center;">Game Feedback</h1>
+    </header>
+
+    <main style="max-width: 500px; margin: 20px auto; background: #F6F4D2; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+        <form id="feedbackForm" style="display: flex; flex-direction: column; gap: 15px;">
+            <label for="fb-name">Name:</label>
+            <input type="text" id="fb-name" required minlength="2" style="padding: 8px;">
+            
+            <label for="fb-rating">Rating:</label>
+            <select id="fb-rating" required style="padding: 8px;">
+                <option value="">Select a rating</option>
+                <option value="5">5 - Excellent</option>
+                <option value="4">4 - Good</option>
+                <option value="3">3 - Average</option>
+                <option value="2">2 - Poor</option>
+                <option value="1">1 - Terrible</option>
+            </select>
+
+            <label for="fb-comments">Comments:</label>
+            <textarea id="fb-comments" rows="4" required style="padding: 8px;"></textarea>
+
+            <button type="submit" style="background-color: #A44A3F; color: white; border: none; padding: 12px; cursor: pointer; font-weight: bold; border-radius: 5px;">Submit Feedback</button>
+        </form>
+        <div id="feedbackResponse" style="margin-top: 15px; text-align: center; font-weight: bold;"></div>
+    </main>
+
+    <script src="feedback.js"></script>
+</body>
+</html>
